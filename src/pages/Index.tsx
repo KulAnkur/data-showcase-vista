@@ -3,8 +3,11 @@ import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import ProjectGrid from '@/components/projects/ProjectGrid';
 import ProjectFilters, { FilterOptions } from '@/components/projects/ProjectFilters';
+import AddProjectDialog from '@/components/projects/AddProjectDialog';
 import { Project } from '@/components/projects/ProjectCard';
 import { mockProjects } from '@/data/mockProjects';
+import { toast } from 'sonner';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 
 const Index = () => {
   const [projects, setProjects] = useState<Project[]>(mockProjects);
@@ -14,11 +17,12 @@ const Index = () => {
     categories: [],
     technologies: [],
   });
+  const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
 
   // Get all unique categories and technologies for filter options
   const availableFilters = {
-    categories: [...new Set(mockProjects.flatMap(p => p.tags.filter(t => t.type === 'category').map(t => t.name)))],
-    technologies: [...new Set(mockProjects.flatMap(p => p.tags.filter(t => t.type === 'tech').map(t => t.name)))],
+    categories: [...new Set(projects.flatMap(p => p.tags.filter(t => t.type === 'category').map(t => t.name)))],
+    technologies: [...new Set(projects.flatMap(p => p.tags.filter(t => t.type === 'tech').map(t => t.name)))],
   };
 
   // Apply search and filters
@@ -65,6 +69,27 @@ const Index = () => {
     setActiveFilters(filters);
   };
 
+  const handleAddProject = (newProject: Omit<Project, 'id'>) => {
+    // Generate a simple ID (in a real app, this would be handled by the backend)
+    const id = String(projects.length + 1);
+    const projectWithId = { id, ...newProject };
+    
+    setProjects(prev => [...prev, projectWithId]);
+    toast.success('Project added successfully');
+  };
+
+  const handleDeleteProject = (id: string) => {
+    setConfirmDelete(id);
+  };
+
+  const confirmDeleteProject = () => {
+    if (confirmDelete) {
+      setProjects(prev => prev.filter(project => project.id !== confirmDelete));
+      toast.success('Project deleted successfully');
+      setConfirmDelete(null);
+    }
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar onSearch={handleSearch} />
@@ -78,12 +103,19 @@ const Index = () => {
             </p>
           </div>
           
+          <div className="flex justify-between mb-6">
+            <AddProjectDialog onAddProject={handleAddProject} />
+          </div>
+          
           <ProjectFilters 
             onFilterChange={handleFilterChange}
             availableFilters={availableFilters}
           />
           
-          <ProjectGrid projects={filteredProjects} />
+          <ProjectGrid 
+            projects={filteredProjects}
+            onDeleteProject={handleDeleteProject} 
+          />
         </div>
       </main>
       
@@ -109,6 +141,21 @@ const Index = () => {
           </div>
         </div>
       </footer>
+      
+      <AlertDialog open={!!confirmDelete} onOpenChange={(open) => !open && setConfirmDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Project</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this project? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDeleteProject}>Delete</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
