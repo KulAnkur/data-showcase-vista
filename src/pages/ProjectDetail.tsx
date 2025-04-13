@@ -98,31 +98,49 @@ const ProjectDetail = () => {
             <section className="mb-12">
               <h2 className="text-2xl font-bold mb-6">Visualizations</h2>
               
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow w-full">
-                  <h3 className="text-lg font-medium mb-4">Monthly Data Distribution</h3>
-                  <img 
-                    src={`/static/visualizations/${project.id}/chart1.png`} 
-                    alt="Monthly Data Distribution" 
-                    className="w-full h-auto"
-                  />
-                </div>
-                <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow w-full">
-                  <h3 className="text-lg font-medium mb-4">Comparison Analysis</h3>
-                  <img 
-                    src={`/static/visualizations/${project.id}/chart2.png`} 
-                    alt="Comparison Analysis" 
-                    className="w-full h-auto"
-                  />
-                </div>
-              </div>
-              <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow w-full">
-                <h3 className="text-lg font-medium mb-4">Trend Analysis Over Time</h3>
-                <img 
-                  src={`/static/visualizations/${project.id}/chart3.png`} 
-                  alt="Trend Analysis" 
-                  className="w-full h-auto"
-                />
+              <div className="grid grid-cols-1 gap-6 mb-6">
+                <Card className="w-full">
+                  <CardContent className="p-6">
+                    <h3 className="text-lg font-medium mb-4">Plotly Visualization</h3>
+                    <div className="bg-white border rounded-md w-full h-[400px] overflow-hidden">
+                      {/* Plotly iframe embedding */}
+                      <iframe 
+                        src={`/static/visualizations/${project.id}/plotly_chart.html`}
+                        className="w-full h-full"
+                        title="Plotly Visualization"
+                        frameBorder="0"
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card className="w-full">
+                  <CardContent className="p-6">
+                    <h3 className="text-lg font-medium mb-4">Matplotlib Visualization</h3>
+                    <div className="bg-white border rounded-md w-full flex justify-center p-4">
+                      <img 
+                        src={`/static/visualizations/${project.id}/matplotlib_chart.png`}
+                        alt="Matplotlib Visualization"
+                        className="max-w-full max-h-[400px]"
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card className="w-full">
+                  <CardContent className="p-6">
+                    <h3 className="text-lg font-medium mb-4">Custom Visualization Embed</h3>
+                    <div className="bg-white border rounded-md w-full h-[400px] p-4">
+                      <div id="custom-viz-container" className="w-full h-full">
+                        {/* This div can be used to mount custom visualizations */}
+                        <p className="text-center text-muted-foreground pt-16">
+                          Custom visualization will render here.<br/>
+                          To embed your own visualization, replace this with your HTML embed code or script.
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
             </section>
             
