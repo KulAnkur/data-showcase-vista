@@ -15,10 +15,27 @@ const ProjectDetail = () => {
   const [project, setProject] = useState<Project | null>(null);
   
   useEffect(() => {
-    // Using mock data instead of backend API
-    const foundProject = mockProjects.find(p => p.id === id);
-    if (foundProject) {
-      setProject(foundProject);
+    if (!id) return;
+    
+    // First try to find the project in localStorage
+    const savedProjects = localStorage.getItem('projects');
+    if (savedProjects) {
+      try {
+        const parsedProjects = JSON.parse(savedProjects) as Project[];
+        const foundProject = parsedProjects.find(p => p.id === id);
+        if (foundProject) {
+          setProject(foundProject);
+          return;
+        }
+      } catch (error) {
+        console.error('Error parsing projects from localStorage:', error);
+      }
+    }
+    
+    // Fallback to mock data if not found in localStorage
+    const mockProject = mockProjects.find(p => p.id === id);
+    if (mockProject) {
+      setProject(mockProject);
     }
   }, [id]);
 
@@ -29,6 +46,7 @@ const ProjectDetail = () => {
         <main className="flex-1 dashboard-container py-12">
           <div className="flex flex-col items-center justify-center py-20">
             <h2 className="text-2xl font-bold mb-4">Project not found</h2>
+            <p className="text-gray-600 mb-6">The project with ID: "{id}" could not be found.</p>
             <Button asChild>
               <Link to="/">Back to Projects</Link>
             </Button>

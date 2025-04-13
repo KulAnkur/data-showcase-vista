@@ -25,6 +25,24 @@ const Index = () => {
     technologies: [...new Set(projects.flatMap(p => p.tags.filter(t => t.type === 'tech').map(t => t.name)))],
   };
 
+  // Save projects to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem('projects', JSON.stringify(projects));
+  }, [projects]);
+
+  // Load projects from localStorage on initial render
+  useEffect(() => {
+    const savedProjects = localStorage.getItem('projects');
+    if (savedProjects) {
+      try {
+        setProjects(JSON.parse(savedProjects));
+        setFilteredProjects(JSON.parse(savedProjects));
+      } catch (error) {
+        console.error('Error parsing projects from localStorage:', error);
+      }
+    }
+  }, []);
+
   // Apply search and filters
   useEffect(() => {
     let result = projects;
@@ -70,8 +88,12 @@ const Index = () => {
   };
 
   const handleAddProject = (newProject: Omit<Project, 'id'>) => {
-    // Generate a simple ID (in a real app, this would be handled by the backend)
-    const id = String(projects.length + 1);
+    // Generate a unique, sequential ID
+    const maxId = projects.length > 0 
+      ? Math.max(...projects.map(p => parseInt(p.id))) 
+      : 0;
+    const id = String(maxId + 1);
+    
     const projectWithId = { id, ...newProject };
     
     setProjects(prev => [...prev, projectWithId]);
