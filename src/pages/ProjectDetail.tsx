@@ -1,12 +1,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ChevronLeft, Calendar, Tag, Share2 } from 'lucide-react';
+import { ChevronLeft, Calendar, Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { mockProjects } from '@/data/mockProjects';
 import { Project } from '@/components/projects/ProjectCard';
-import PlaceholderChart from '@/components/visualizations/PlaceholderChart';
-import VisualizationControls, { VisualizationSettings } from '@/components/visualizations/VisualizationControls';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
@@ -15,41 +13,14 @@ import Navbar from '@/components/layout/Navbar';
 const ProjectDetail = () => {
   const { id } = useParams<{ id: string }>();
   const [project, setProject] = useState<Project | null>(null);
-  const [visualizationSettings, setVisualizationSettings] = useState<VisualizationSettings>({
-    chartType: 'bar',
-    dateRange: { start: null, end: null },
-    aggregation: 'monthly',
-    parameterValue: 50,
-  });
   
-  // Sample data for visualizations
-  const [chartData, setChartData] = useState([
-    { name: 'Jan', value: 400 },
-    { name: 'Feb', value: 300 },
-    { name: 'Mar', value: 600 },
-    { name: 'Apr', value: 800 },
-    { name: 'May', value: 500 },
-    { name: 'Jun', value: 900 },
-  ]);
-
   useEffect(() => {
-    // In a real app, we would fetch the project data
+    // Using mock data instead of backend API
     const foundProject = mockProjects.find(p => p.id === id);
     if (foundProject) {
       setProject(foundProject);
     }
   }, [id]);
-
-  // Update visualization data when settings change
-  useEffect(() => {
-    // This would typically involve an API call to get new data based on settings
-    // For demo purposes, we'll just modify the existing data
-    const newData = chartData.map(item => ({
-      ...item,
-      value: item.value * (visualizationSettings.parameterValue / 50),
-    }));
-    setChartData(newData);
-  }, [visualizationSettings]);
 
   if (!project) {
     return (
@@ -125,38 +96,34 @@ const ProjectDetail = () => {
             <Separator className="my-8" />
             
             <section className="mb-12">
-              <h2 className="text-2xl font-bold mb-6">Interactive Visualizations</h2>
-              
-              <VisualizationControls 
-                onSettingsChange={setVisualizationSettings}
-                parameterName="Sample Size"
-                parameterMin={10}
-                parameterMax={100}
-              />
+              <h2 className="text-2xl font-bold mb-6">Visualizations</h2>
               
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                <PlaceholderChart 
-                  data={chartData} 
-                  title="Monthly Data Distribution"
-                  height={300}
-                />
-                <PlaceholderChart 
-                  data={chartData.map(item => ({ 
-                    name: item.name, 
-                    value: item.value * 0.75 + Math.random() * 100
-                  }))} 
-                  title="Comparison Analysis"
-                  height={300}
+                <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow w-full">
+                  <h3 className="text-lg font-medium mb-4">Monthly Data Distribution</h3>
+                  <img 
+                    src={`/static/visualizations/${project.id}/chart1.png`} 
+                    alt="Monthly Data Distribution" 
+                    className="w-full h-auto"
+                  />
+                </div>
+                <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow w-full">
+                  <h3 className="text-lg font-medium mb-4">Comparison Analysis</h3>
+                  <img 
+                    src={`/static/visualizations/${project.id}/chart2.png`} 
+                    alt="Comparison Analysis" 
+                    className="w-full h-auto"
+                  />
+                </div>
+              </div>
+              <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow w-full">
+                <h3 className="text-lg font-medium mb-4">Trend Analysis Over Time</h3>
+                <img 
+                  src={`/static/visualizations/${project.id}/chart3.png`} 
+                  alt="Trend Analysis" 
+                  className="w-full h-auto"
                 />
               </div>
-              <PlaceholderChart 
-                data={chartData.map(item => ({ 
-                  name: item.name, 
-                  value: item.value * 1.2
-                }))} 
-                title="Trend Analysis Over Time"
-                height={400}
-              />
             </section>
             
             <section className="mb-12">
@@ -193,7 +160,7 @@ const ProjectDetail = () => {
                   <h3 className="text-xl font-semibold mb-4">Conclusions</h3>
                   <p className="mb-4">
                     The analysis demonstrates that the proposed methodology effectively captures the underlying 
-                    patterns in the data. The visualization tools developed provide intuitive access to complex 
+                    patterns in the data. The visualization tools provide intuitive access to complex 
                     information, enabling stakeholders to make data-driven decisions.
                   </p>
                   <p>

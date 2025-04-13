@@ -1,7 +1,7 @@
 
 import React from 'react';
 import ProjectCard, { Project } from './ProjectCard';
-import { Trash2, Eye } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
@@ -26,30 +26,8 @@ const ProjectGrid: React.FC<ProjectGridProps> = ({ projects, onDeleteProject }) 
         <div key={project.id} className="relative group">
           <ProjectCard project={project} />
           
-          <div className="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="secondary"
-                    size="icon"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      // This would open a preview in a real implementation
-                      console.log('Preview visualization for project:', project.id);
-                    }}
-                  >
-                    <Eye className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Quick preview</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            
-            {onDeleteProject && (
+          {onDeleteProject && (
+            <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -70,8 +48,8 @@ const ProjectGrid: React.FC<ProjectGridProps> = ({ projects, onDeleteProject }) 
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       ))}
     </div>
