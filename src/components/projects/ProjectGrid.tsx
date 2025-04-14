@@ -1,4 +1,16 @@
 
+/**
+ * ProjectGrid Component
+ * 
+ * Displays a grid of ProjectCard components with delete functionality.
+ * Shows a "No projects found" message when the grid is empty.
+ * 
+ * How to edit:
+ * - To change grid layout: Modify the className in the grid div
+ * - To change empty state: Update the message in the empty div
+ * - To modify the delete button: Update the Button component
+ */
+
 import React from 'react';
 import ProjectCard, { Project } from './ProjectCard';
 import { Trash2 } from 'lucide-react';
@@ -11,6 +23,7 @@ interface ProjectGridProps {
 }
 
 const ProjectGrid: React.FC<ProjectGridProps> = ({ projects, onDeleteProject }) => {
+  // Display message when no projects are found
   if (projects.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-center">

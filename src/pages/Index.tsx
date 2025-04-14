@@ -1,4 +1,16 @@
 
+/**
+ * Main Index Page
+ * 
+ * This is the homepage of the DataVista application. It displays the project grid
+ * with filtering capabilities and allows users to search for projects.
+ * 
+ * How to edit:
+ * - To modify filters: Update the ProjectFilters component
+ * - To change project display: Modify the ProjectGrid component
+ * - To add search functionality: Adjust the handleSearch function
+ */
+
 import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import ProjectGrid from '@/components/projects/ProjectGrid';
@@ -7,10 +19,15 @@ import { Project } from '@/components/projects/ProjectCard';
 import { mockProjects } from '@/data/mockProjects';
 import { toast } from 'sonner';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { PlusCircle } from 'lucide-react';
 
+// Storage key for localStorage
 const STORAGE_KEY = 'datavista-projects';
 
 const Index = () => {
+  // State variables
   const [projects, setProjects] = useState<Project[]>([]);
   const [filteredProjects, setFilteredProjects] = useState<Project[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -89,18 +106,22 @@ const Index = () => {
     setFilteredProjects(result);
   }, [searchTerm, activeFilters, projects]);
 
+  // Handle search input from navbar
   const handleSearch = (term: string) => {
     setSearchTerm(term);
   };
 
+  // Handle filter changes from ProjectFilters component
   const handleFilterChange = (filters: FilterOptions) => {
     setActiveFilters(filters);
   };
 
+  // Handle project deletion
   const handleDeleteProject = (id: string) => {
     setConfirmDelete(id);
   };
 
+  // Confirm and execute project deletion
   const confirmDeleteProject = () => {
     if (confirmDelete) {
       setProjects(prev => prev.filter(project => project.id !== confirmDelete));
@@ -120,6 +141,15 @@ const Index = () => {
             <p className="text-muted-foreground">
               Explore interactive data visualization projects powered by Python and modern web technologies.
             </p>
+          </div>
+          
+          <div className="flex justify-between items-center mb-6">
+            <div></div>
+            <Link to="/add-project">
+              <Button>
+                <PlusCircle className="h-4 w-4 mr-2" /> Add New Project
+              </Button>
+            </Link>
           </div>
           
           <ProjectFilters 

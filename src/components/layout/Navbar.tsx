@@ -1,4 +1,19 @@
 
+/**
+ * Navbar Component
+ * 
+ * The main navigation bar of the application that includes:
+ * - Logo and app name
+ * - Navigation links
+ * - Search functionality
+ * - Dark mode toggle
+ * 
+ * How to edit:
+ * - To add a new navigation link: Add a new Link component to the nav element
+ * - To modify search: Update the form and handleSearch function
+ * - To change the logo: Modify the Link component with the "D" span
+ */
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Moon, Sun } from 'lucide-react';
@@ -11,9 +26,11 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
+  // State for search term and dark mode
   const [searchTerm, setSearchTerm] = useState('');
   const [isDarkMode, setIsDarkMode] = useState(false);
 
+  // Handle search form submission
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (onSearch) {
@@ -21,6 +38,7 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
     }
   };
 
+  // Toggle dark mode
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
     document.documentElement.classList.toggle('dark');
@@ -40,6 +58,7 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
             
             <nav className="hidden md:flex items-center gap-6">
               <Link to="/" className="text-sm font-medium">Projects</Link>
+              <Link to="/add-project" className="text-sm font-medium text-muted-foreground hover:text-foreground">Add Project</Link>
               <Link to="/about" className="text-sm font-medium text-muted-foreground hover:text-foreground">About</Link>
             </nav>
           </div>

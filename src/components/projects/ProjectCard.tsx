@@ -1,10 +1,26 @@
 
+/**
+ * ProjectCard Component
+ * 
+ * Displays a single project as a card with its details including:
+ * - Title
+ * - Description
+ * - Tags (categories and technologies)
+ * - Last updated date
+ * 
+ * How to edit:
+ * - To change the card layout: Modify the JSX structure
+ * - To change tag colors: Update the getTagClassName function
+ * - To change date format: Modify the formatDate function
+ */
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar } from 'lucide-react';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 
+// Project type definition
 export interface Project {
   id: string;
   title: string;
@@ -22,6 +38,7 @@ interface ProjectCardProps {
 }
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
+  // Format date to readable format
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return new Intl.DateTimeFormat('en-US', {
@@ -31,6 +48,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
     }).format(date);
   };
 
+  // Get CSS class for tags based on type and name
   const getTagClassName = (tag: { name: string; type: string }) => {
     if (tag.type === 'tech') return 'bg-indigo-50 text-indigo-700 border-indigo-200';
     
