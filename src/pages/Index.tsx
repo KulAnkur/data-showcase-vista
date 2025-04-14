@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import ProjectGrid from '@/components/projects/ProjectGrid';
 import ProjectFilters, { FilterOptions } from '@/components/projects/ProjectFilters';
-import AddProjectDialog from '@/components/projects/AddProjectDialog';
 import { Project } from '@/components/projects/ProjectCard';
 import { mockProjects } from '@/data/mockProjects';
 import { toast } from 'sonner';
@@ -98,19 +97,6 @@ const Index = () => {
     setActiveFilters(filters);
   };
 
-  const handleAddProject = (newProject: Omit<Project, 'id'>) => {
-    // Generate a unique, sequential ID
-    const maxId = projects.length > 0 
-      ? Math.max(...projects.map(p => parseInt(p.id))) 
-      : 0;
-    const id = String(maxId + 1);
-    
-    const projectWithId = { id, ...newProject };
-    
-    setProjects(prev => [...prev, projectWithId]);
-    toast.success('Project added successfully');
-  };
-
   const handleDeleteProject = (id: string) => {
     setConfirmDelete(id);
   };
@@ -134,10 +120,6 @@ const Index = () => {
             <p className="text-muted-foreground">
               Explore interactive data visualization projects powered by Python and modern web technologies.
             </p>
-          </div>
-          
-          <div className="flex justify-between mb-6">
-            <AddProjectDialog onAddProject={handleAddProject} />
           </div>
           
           <ProjectFilters 
