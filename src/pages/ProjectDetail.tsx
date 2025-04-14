@@ -10,6 +10,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import Navbar from '@/components/layout/Navbar';
 
+const STORAGE_KEY = 'datavista-projects';
+
 const ProjectDetail = () => {
   const { id } = useParams<{ id: string }>();
   const [project, setProject] = useState<Project | null>(null);
@@ -18,7 +20,7 @@ const ProjectDetail = () => {
     if (!id) return;
     
     // First try to find the project in localStorage
-    const savedProjects = localStorage.getItem('projects');
+    const savedProjects = localStorage.getItem(STORAGE_KEY);
     if (savedProjects) {
       try {
         const parsedProjects = JSON.parse(savedProjects) as Project[];

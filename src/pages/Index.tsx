@@ -9,9 +9,11 @@ import { mockProjects } from '@/data/mockProjects';
 import { toast } from 'sonner';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 
+const STORAGE_KEY = 'datavista-projects';
+
 const Index = () => {
-  const [projects, setProjects] = useState<Project[]>(mockProjects);
-  const [filteredProjects, setFilteredProjects] = useState<Project[]>(mockProjects);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [filteredProjects, setFilteredProjects] = useState<Project[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilters, setActiveFilters] = useState<FilterOptions>({
     categories: [],
@@ -19,29 +21,38 @@ const Index = () => {
   });
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
 
+  // Load projects from localStorage on initial render
+  useEffect(() => {
+    const savedProjects = localStorage.getItem(STORAGE_KEY);
+    
+    if (savedProjects) {
+      try {
+        const parsedProjects = JSON.parse(savedProjects) as Project[];
+        setProjects(parsedProjects);
+        setFilteredProjects(parsedProjects);
+      } catch (error) {
+        console.error('Error parsing projects from localStorage:', error);
+        // Fallback to mock projects if there's an error
+        setProjects(mockProjects);
+        setFilteredProjects(mockProjects);
+      }
+    } else {
+      // Use mock projects for first-time users
+      setProjects(mockProjects);
+      setFilteredProjects(mockProjects);
+    }
+  }, []);
+
+  // Save projects to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
+  }, [projects]);
+
   // Get all unique categories and technologies for filter options
   const availableFilters = {
     categories: [...new Set(projects.flatMap(p => p.tags.filter(t => t.type === 'category').map(t => t.name)))],
     technologies: [...new Set(projects.flatMap(p => p.tags.filter(t => t.type === 'tech').map(t => t.name)))],
   };
-
-  // Save projects to localStorage whenever they change
-  useEffect(() => {
-    localStorage.setItem('projects', JSON.stringify(projects));
-  }, [projects]);
-
-  // Load projects from localStorage on initial render
-  useEffect(() => {
-    const savedProjects = localStorage.getItem('projects');
-    if (savedProjects) {
-      try {
-        setProjects(JSON.parse(savedProjects));
-        setFilteredProjects(JSON.parse(savedProjects));
-      } catch (error) {
-        console.error('Error parsing projects from localStorage:', error);
-      }
-    }
-  }, []);
 
   // Apply search and filters
   useEffect(() => {
