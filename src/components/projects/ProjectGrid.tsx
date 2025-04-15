@@ -2,27 +2,22 @@
 /**
  * ProjectGrid Component
  * 
- * Displays a grid of ProjectCard components with delete functionality.
+ * Displays a grid of ProjectCard components.
  * Shows a "No projects found" message when the grid is empty.
  * 
  * How to edit:
  * - To change grid layout: Modify the className in the grid div
  * - To change empty state: Update the message in the empty div
- * - To modify the delete button: Update the Button component
  */
 
 import React from 'react';
 import ProjectCard, { Project } from './ProjectCard';
-import { Trash2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface ProjectGridProps {
   projects: Project[];
-  onDeleteProject?: (id: string) => void;
 }
 
-const ProjectGrid: React.FC<ProjectGridProps> = ({ projects, onDeleteProject }) => {
+const ProjectGrid: React.FC<ProjectGridProps> = ({ projects }) => {
   // Display message when no projects are found
   if (projects.length === 0) {
     return (
@@ -38,31 +33,6 @@ const ProjectGrid: React.FC<ProjectGridProps> = ({ projects, onDeleteProject }) 
       {projects.map((project) => (
         <div key={project.id} className="relative group">
           <ProjectCard project={project} />
-          
-          {onDeleteProject && (
-            <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="destructive"
-                      size="icon"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        onDeleteProject(project.id);
-                      }}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Delete project</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
-          )}
         </div>
       ))}
     </div>

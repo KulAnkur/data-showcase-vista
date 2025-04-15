@@ -58,7 +58,6 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
             
             <nav className="hidden md:flex items-center gap-6">
               <Link to="/" className="text-sm font-medium">Projects</Link>
-              <Link to="/add-project" className="text-sm font-medium text-muted-foreground hover:text-foreground">Add Project</Link>
               <Link to="/about" className="text-sm font-medium text-muted-foreground hover:text-foreground">About</Link>
             </nav>
           </div>

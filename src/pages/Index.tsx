@@ -17,11 +17,6 @@ import ProjectGrid from '@/components/projects/ProjectGrid';
 import ProjectFilters, { FilterOptions } from '@/components/projects/ProjectFilters';
 import { Project } from '@/components/projects/ProjectCard';
 import { mockProjects } from '@/data/mockProjects';
-import { toast } from 'sonner';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
-import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { PlusCircle } from 'lucide-react';
 
 // Storage key for localStorage
 const STORAGE_KEY = 'datavista-projects';
@@ -35,7 +30,6 @@ const Index = () => {
     categories: [],
     technologies: [],
   });
-  const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
 
   // Load projects from localStorage on initial render
   useEffect(() => {
@@ -58,11 +52,6 @@ const Index = () => {
       setFilteredProjects(mockProjects);
     }
   }, []);
-
-  // Save projects to localStorage whenever they change
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
-  }, [projects]);
 
   // Get all unique categories and technologies for filter options
   const availableFilters = {
@@ -116,20 +105,6 @@ const Index = () => {
     setActiveFilters(filters);
   };
 
-  // Handle project deletion
-  const handleDeleteProject = (id: string) => {
-    setConfirmDelete(id);
-  };
-
-  // Confirm and execute project deletion
-  const confirmDeleteProject = () => {
-    if (confirmDelete) {
-      setProjects(prev => prev.filter(project => project.id !== confirmDelete));
-      toast.success('Project deleted successfully');
-      setConfirmDelete(null);
-    }
-  };
-
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar onSearch={handleSearch} />
@@ -143,15 +118,6 @@ const Index = () => {
             </p>
           </div>
           
-          <div className="flex justify-between items-center mb-6">
-            <div></div>
-            <Link to="/add-project">
-              <Button>
-                <PlusCircle className="h-4 w-4 mr-2" /> Add New Project
-              </Button>
-            </Link>
-          </div>
-          
           <ProjectFilters 
             onFilterChange={handleFilterChange}
             availableFilters={availableFilters}
@@ -159,7 +125,6 @@ const Index = () => {
           
           <ProjectGrid 
             projects={filteredProjects}
-            onDeleteProject={handleDeleteProject} 
           />
         </div>
       </main>
@@ -186,21 +151,6 @@ const Index = () => {
           </div>
         </div>
       </footer>
-      
-      <AlertDialog open={!!confirmDelete} onOpenChange={(open) => !open && setConfirmDelete(null)}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Delete Project</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to delete this project? This action cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDeleteProject}>Delete</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </div>
   );
 };
